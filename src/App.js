@@ -1,24 +1,36 @@
-import { useState, useEffect } from "react";
-
-function Hello() {
-  function byeFn() {
-    console.log("bye :(");
-  }
-  function hiFn() {
-    console.log("hi! :)");
-    return byeFn;
-  }
-  useEffect(hiFn, []);
-  return <h1>Hello</h1>;
-}
+import { useState } from "react";
 
 function App() {
-  const [showing, setshowing] = useState(false);
-  const onClick = () => setshowing((prev) => !prev);
+  const [toDo, setToDo] = useState("");
+  const [toDos, setToDos] = useState([]);
+  const onChange = (event) => setToDo(event.target.value);
+  const onSubmit = (event) => {
+    event.preventDefault()
+    if (toDo === "") {
+      return;
+    }
+    setToDo(""); // 안에 수정하는 값이 들어갈 수 있고 함수가 들어갈 수도 있음
+    setToDos(currentArray => [toDo, ...currentArray]);
+    // ...currentArray 는 []의 안에 인자를 추가해준다.
+  };
+  console.log(toDos);
   return (
     <div>
-      {showing ? <Hello /> : null}
-      <button onClick={onClick}>{showing ? "Hide" : "show"} </button>
+      <h1>My To Dos({toDos.length})</h1>
+      <form onSubmit={onSubmit}>
+        <input 
+        onChange={onChange}
+        value={toDo}
+        type="text" 
+        placeholder="Write your to do ..." 
+        />
+        <button>Add To Do</button>
+      </form>
+      <hr/>
+      <ul> 
+        {toDos.map((item, index) => (
+          <li key={index}>{item}</li>))}
+      </ul>
     </div>
   );
 }
